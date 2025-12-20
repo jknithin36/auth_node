@@ -1,7 +1,4 @@
 import { Schema, model } from "mongoose";
-import { boolean, lowercase } from "zod";
-import { required } from "zod/v4/core/util.cjs";
-import { fa, tr } from "zod/v4/locales";
 
 const userSchema = new Schema(
   {
@@ -11,10 +8,12 @@ const userSchema = new Schema(
       unique: true,
       trim: true,
       lowercase: true,
+      index: true,
     },
     passwordHash: {
       type: String,
       required: true,
+      select: false,
     },
     role: {
       type: String,
@@ -27,6 +26,10 @@ const userSchema = new Schema(
     },
     fullName: {
       type: String,
+      trim: true,
+
+      minlength: 2,
+      maxlength: 100,
     },
     twoFactorEnabled: {
       type: Boolean,
@@ -47,6 +50,30 @@ const userSchema = new Schema(
     resetPasswordExpires: {
       type: Date,
       default: undefined,
+    },
+    loginAttempts: {
+      type: Number,
+      default: 0,
+    },
+
+    lockUntil: {
+      type: Date,
+      default: undefined,
+    },
+
+    lastLoginAt: {
+      type: Date,
+      default: null,
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+
+    deletedAt: {
+      type: Date,
+      default: null,
     },
   },
   {
